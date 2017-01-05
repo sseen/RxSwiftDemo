@@ -27,13 +27,7 @@ class ViewController: UIViewController, UITableViewDataSource {
             .rx.text
             .throttle(0.5, scheduler: MainScheduler.instance)
             .filter{ ($0?.characters.count)! > 0 }
-            .distinctUntilChanged({ (one, two) -> Bool in
-                if (one == two) {
-                    return true
-                } else {
-                    return false
-                }
-            })
+            .distinctUntilChanged{ $0 == $1 }
             .subscribe(onNext:{
                 [unowned self] (query) in // Here we will be notified of every new value
                 self.shownCities = self.allCities.filter { $0.hasPrefix(query!) } // We now do our "API Request" to find cities.
